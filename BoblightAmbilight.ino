@@ -1,6 +1,6 @@
 #include <FastLED.h>
 
-#define NUM_LEDS 97
+#define NUM_LEDS 95
 
 // Data pin that led data will be written out over
 #define DATA_PIN 3
@@ -26,6 +26,12 @@ void setup() {
   Serial.begin(serialRate);
 
   turnoff_all_leds();
+  light_leds(NUM_LEDS, 0xff, 0x00, 0x07);
+  delay(1000);
+  light_leds(NUM_LEDS, 0, 0xff, 0x00);
+  delay(1000);
+  light_leds(NUM_LEDS, 0, 0, 0xff);
+  delay(1000);
   slideshow_animation();
 }
 
@@ -58,10 +64,18 @@ void slideshow_animation() {
       leds[whiteLed] = CRGB::Black;         
    }   
 }
-
-void light_leds(int nb_leds, CRGB color) {
+void light_leds(int nb_leds, CRGB color) { 
     for(int i = 0 ; i < nb_leds ; i++) {
         leds[i] = color;
+    }
+    FastLED.show();
+}
+
+void light_leds(int nb_leds, int red, int green, int blue) {
+    for(int i = 0 ; i < nb_leds ; i++) {
+        leds[i].r = red;
+        leds[i].g = green;
+        leds[i].b = blue;
     }
     FastLED.show();
 }
@@ -72,7 +86,7 @@ void blink_leds(int nb_leds, CRGB color) {
   // Wait a little bit
   delay(500);
 
-  light_leds(nb_leds, CRGB::Black);
+  turnoff_all_leds();
   delay(500);  
 }
 
@@ -105,4 +119,9 @@ void read_rgb_data() {
       leds[iLed].b = b;
     }
   }
+}
+
+int StrToHex(char str[])
+{
+  return (int) strtol(str, 0, 16);
 }
