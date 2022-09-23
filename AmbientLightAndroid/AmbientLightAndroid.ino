@@ -26,7 +26,7 @@
 // For led chipsets that are SPI based (four wires - data, clock, ground, and power), both defines DATA_PIN and CLOCK_PIN are needed
 
 // Data pin that led data will be written out over
-#define DATA_PIN 3
+#define DATA_PIN 5
 
 // Clock pin only needed for SPI based chipsets when not using hardware SPI
 #define CLOCK_PIN 13
@@ -44,6 +44,7 @@
 // Baudrate, higher rate allows faster refresh rate and more LEDs
 #define BAUD_RATE 115200      // use 115200 for ftdi based boards
 
+#define LED_PINS DATA_PIN, CLOCK_PIN  // 4 wire leds
 
 /*************************************************
    ANDROID AMBILIGHT APPLICATION ARDUINO SKETCH
@@ -167,17 +168,21 @@ void setup() {
         transmissionSuccess = false;
         break;
       }
-      r = Serial.read();
-      if (!checkIncommingData()) {
-        transmissionSuccess = false;
-        break;
-      }
+      
       g = Serial.read();
       if (!checkIncommingData()) {
         transmissionSuccess = false;
         break;
       }
+      
+      r = Serial.read();
+      if (!checkIncommingData()) {
+        transmissionSuccess = false;
+        break;
+      }
+      
       b = Serial.read();
+      
       leds[idx].r = r;
       leds[idx].g = g;
       leds[idx].b = b;
@@ -196,4 +201,3 @@ void setup() {
 void loop() {
   // Not used. See note in setup() function.
 }
-
